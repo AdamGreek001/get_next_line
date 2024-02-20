@@ -6,7 +6,7 @@
 /*   By: eel-alao <eel-alao@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/17 01:43:33 by eel-alao          #+#    #+#             */
-/*   Updated: 2024/02/19 21:22:03 by eel-alao         ###   ########.fr       */
+/*   Updated: 2024/02/20 23:13:26 by eel-alao         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,29 +27,29 @@ char	*free_me(char *v1, char *v2)
 	return (NULL);
 }
 
-int ft_strlen(char  *str)
+int	ft_strlen(char *str)
 {
-   size_t   i;
-	
+	size_t	i;
+
 	if (!str)
-		return(0);
-   
-   i = 0;
-   while (str[i] != '\0')
-      i++;
-   return (i);
+		return (0);
+	i = 0;
+	while (str[i] != '\0')
+		i++;
+	return (i);
 }
 
-char *ft_strjoin(char *s1, char *s2)
+char	*ft_strjoin(char *s1, char *s2)
 {
 	char	*res;
 	int		i;
 	int		j;
-	if(!s1)
-		return(s2);
-	res = malloc (ft_strlen(s1)+ ft_strlen(s2) + 1);
+
+	if (!s1)
+		return (s2);
+	res = malloc((ft_strlen(s1) + ft_strlen(s2) + 1) * sizeof(char));
 	if (!res)
-		return(NULL);
+		return (NULL);
 	i = 0;
 	while (s1[i])
 	{
@@ -64,9 +64,6 @@ char *ft_strjoin(char *s1, char *s2)
 		j++;
 	}
 	res[i] = '\0';
-	free(s1);
-	s1=NULL;
-	free(s2);
-	s2=NULL;
-	return(res);
+	free_me(s1, s2);
+	return (res);
 }
