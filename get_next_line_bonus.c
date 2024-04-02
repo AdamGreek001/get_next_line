@@ -1,16 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line.c                                    :+:      :+:    :+:   */
+/*   get_next_line_bonus.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: eel-alao <eel-alao@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/02/15 19:20:26 by eel-alao          #+#    #+#             */
-/*   Updated: 2024/04/01 01:08:26 by eel-alao         ###   ########.fr       */
+/*   Created: 2024/03/30 01:06:00 by eel-alao          #+#    #+#             */
+/*   Updated: 2024/04/01 01:34:05 by eel-alao         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line.h"
+#include "get_next_line_bonus.h"
 
 char	*update_saver(char *sv)
 {
@@ -100,36 +100,95 @@ char	*get_content(int fd, char *content)
 
 char	*get_next_line(int fd)
 {
-	static char	*saver;
+	static char	*saver[10024];
 	char		*line;
 
-	if (BUFFER_SIZE < 0 || fd < 0)
+	if (BUFFER_SIZE < 0 || fd < 0 || fd > 10024)
 		return (NULL);
-	saver = get_content(fd, saver);
-	if (!saver || saver[0] == '\0')
+	saver[fd] = get_content(fd, saver[fd]);
+	if (!saver[fd] || saver[fd][0] == '\0')
 	{
-		free(saver);
-		saver = NULL;
+		free(saver[fd]);
+		saver[fd] = NULL;
 		return (NULL);
 	}
-	line = bring_new_line(saver);
+	line = bring_new_line(saver[fd]);
 	if (!line || line[0] == '\0')
 	{
 		free(line);
 		return (NULL);
 	}
-	saver = update_saver(saver);
+	saver[fd] = update_saver(saver[fd]);
 	return (line);
 }
 
 int main (void)
 {
-   int fd1 = open("tests/test.txt", O_RDONLY, 0777);
-   char *a;
-
-   while (a)
-   {
-      a = get_next_line(fd1);
-      printf("%s", a);
-   } 
+   int fd1 = open("tests/test.txt", O_RDONLY);
+   int fd2 = open("tests/test2.txt", O_RDONLY);
+   int fd3 = open("tests/test3.txt", O_RDONLY);
+   char *a = get_next_line(fd1);
+	char *b = get_next_line(fd2);
+	char *c = get_next_line(fd3);
+	
+	while (a || b || c)
+	{
+		printf("%s%s%s", a,b,c);
+		a = get_next_line(fd1);
+		b = get_next_line(fd2);
+		c = get_next_line(fd3);
+	}
+	
+   // while (i < 7)
+   // {
+   //    a = get_next_line(fd1);
+   //    printf("line [%02d]: %s", i, a);
+	// 	free(a);
+	// 	a = get_next_line(fd2);
+   //    printf("line [%02d]: %s", i, a);
+	// 	free(a);
+	// 	a = get_next_line(fd3);
+   //    printf("line [%02d]: %s", i, a);
+	// 	free(a);
+	// 	i++;
+   // }
+	
 }
+
+// int	main(void)
+// {
+// 	char	*line;
+// 	int		i;
+// 	int		fd1;
+// 	int		fd2;
+// 	int		fd3;
+//    int      fd4;
+
+// 	fd1 = open("tests/test.txt", O_RDONLY);
+// 	fd2 = open("tests/test2.txt", O_RDONLY);
+// 	fd3 = open("tests/test3.txt", O_RDONLY);
+// 	fd4 = 74390023;
+// 	i = 1;
+// 	while (i < 7)
+// 	{
+// 		line = get_next_line(fd1);
+// 		printf("line [%02d]: %s", i, line);
+// 		free(line);
+// 		line = get_next_line(fd2);
+// 		printf("line [%02d]: %s", i, line);
+// 		free(line);
+// 		line = get_next_line(fd3);
+// 		printf("line [%02d]: %s", i, line);
+// 		free(line);
+      
+// 		line = get_next_line(fd4);
+// 		printf("line [%02d]: %s", i, line);
+// 		free(line);
+// 		i++;
+// 	} 
+// 	close(fd1);
+// 	close(fd2);
+// 	close(fd3);
+// 	close(fd4);
+// 	return (0);
+// }
